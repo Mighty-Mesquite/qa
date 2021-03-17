@@ -3,11 +3,12 @@ const { Schema } = mongoose;
 
 const answerSchema = new Schema({
   question_id: Number,
-  answerer_name: String,
-  helpfullness: Number,
-  photos: [photoSchema],
   body: String,
-  date: { type: Date, default: Date.now}
+  answer_date: { type: Date, default: Date.now}
+  answerer_name: String,
+  answerer_email: String,
+  reported: Boolean,
+  helpful: Number
 });
 
 const Answer = mongoose.model('answer', answerSchema);

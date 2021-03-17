@@ -7,20 +7,20 @@ USE questions;
 --
 -- ---
 
-DROP TABLE IF EXISTS `questions`;
+DROP TABLE IF EXISTS questions;
 
-CREATE TABLE `questions` (
+CREATE TABLE questions (
   `question_id` INTEGER NOT NULL AUTO_INCREMENT,
-  `question_date` DATE NOT NULL,
-  `question_time` TIME NOT NULL,
   `question_body` TEXT(1000) NOT NULL,
+  `question_date` DATE NOT NULL,
   `asker_name` VARCHAR(60) NULL,
+  `asker_email` VARCHAR(60) NULL,
   `product_id` SMALLINT NOT NULL,
-  `question_helpfulness` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
   `reported` BINARY NOT NULL DEFAULT 0,
+  `question_helpfulness` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
   -- Possibly type booolean not null default false?
   PRIMARY KEY
-  (`questions_id`)
+  (`question_id`)
 );
 
 -- ---
@@ -28,16 +28,19 @@ CREATE TABLE `questions` (
 --
 -- ---
 
-DROP TABLE IF EXISTS `answers`;
+DROP TABLE IF EXISTS answers;
 
-CREATE TABLE `answer` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `body` TEXT(1000) NOT NULL,
-  `date_` DATE NOT NULL,
+CREATE TABLE answers (
+  `answer_id` INTEGER NOT NULL AUTO_INCREMENT,
+  `question_id` INTEGER NOT NULL,
+  `answer_body` TEXT(1000) NOT NULL,
+  `answer_date` DATE NOT NULL,
   `answerer_name` VARCHAR(60) NOT NULL,
+  `answerer_email` VARCHAR(60) NOT NULL,
+  `reported` BINARY NOT NULL DEFAULT 0,
   `helpfulness` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
-  `questions_id_question` INTEGER NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`answer_id`),
+  FOREIGN KEY (`question_id`) REFERENCES questions (`question_id`) ON DELETE CASCADE
 );
 
 -- ---
@@ -45,21 +48,22 @@ CREATE TABLE `answer` (
 --
 -- ---
 
-DROP TABLE IF EXISTS `photos`;
+DROP TABLE IF EXISTS photos;
 
 CREATE TABLE `photos` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `id_answer` INTEGER NOT NULL,
+  `answer_id` INTEGER NOT NULL,
   `url` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`answer_id`) REFERENCES answers (`answer_id`) ON DELETE CASCADE
 );
 
 -- ---
 -- Foreign Keys
 -- ---
 
-ALTER TABLE `answer` ADD FOREIGN KEY (questions_id_question) REFERENCES `questions` (`questions_id`) ON DELETE CASCADE;
-ALTER TABLE `photos` ADD FOREIGN KEY (id_answer) REFERENCES `answer` (`id`) ON DELETE CASCADE;
+-- ALTER TABLE answers ADD FOREIGN KEY (`question_id`) REFERENCES questions(`question_id`) ON DELETE CASCADE;
+-- ALTER TABLE `photos` ADD FOREIGN KEY (`answer_id`) REFERENCES `answers` (`answer_id`) ON DELETE CASCADE;
 
 -- ---
 -- Table Properties

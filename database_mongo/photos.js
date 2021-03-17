@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
 const photoSchema = new Schema({
   answer_id: Number,

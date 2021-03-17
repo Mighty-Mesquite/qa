@@ -2,12 +2,13 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const questionSchema = {
-  product_id: Number,
+  question_id: Number,
   question_body: String,
-  question_helpful: Number,
-  question_date: {type: Date, default: Date.now},
+  question_date: { type: Date, default: Date.now },
   asker_name: String,
-  reported: Boolean
+  asker_email: String,
+  reported: Boolean,
+  question_helpful: Number
 }
 
 const Question = mongoose.model('question', questionSchema);
