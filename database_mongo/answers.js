@@ -8,11 +8,15 @@ const answerSchema = new Schema({
   answerer_name: String,
   answerer_email: String,
   reported: Boolean,
-  helpful: Number
+  helpful: Number,
+  photos: [{
+    type: mongoose.Schema.Types.ObjectID,
+    ref: 'Photo'
+  }]
 });
 
 const Answer = mongoose.model('answer', answerSchema);
 
-module.export = {
+module.exports = {
   Answer
 }

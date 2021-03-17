@@ -8,7 +8,10 @@ const questionSchema = {
   asker_name: String,
   asker_email: String,
   reported: Boolean,
-  question_helpful: Number
+  question_helpful: Number,
+  answers: [{
+      type: mongoose.Schema.Types.ObjectId, ref: 'Answer'
+    }]
 }
 
 const Question = mongoose.model('question', questionSchema);
