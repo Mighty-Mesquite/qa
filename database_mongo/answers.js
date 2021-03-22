@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
+const { Photos } = './photos.js';
 
 const answerSchema = new Schema({
   question_id: Number,
@@ -9,10 +10,7 @@ const answerSchema = new Schema({
   answerer_email: String,
   reported: Boolean,
   helpful: Number,
-  photos: [{
-    type: mongoose.Schema.Types.ObjectID,
-    ref: 'Photo'
-  }]
+  photos: [Photos]
 });
 
 const Answer = mongoose.model('answer', answerSchema);

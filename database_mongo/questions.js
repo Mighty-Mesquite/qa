@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
+const { Answer } = './answer.js';
 
 const questionSchema = {
   question_id: Number,
@@ -9,9 +10,7 @@ const questionSchema = {
   asker_email: String,
   reported: Boolean,
   question_helpful: Number,
-  answers: [{
-      type: mongoose.Schema.Types.ObjectId, ref: 'Answer'
-    }]
+  answers: [Answer]
 }
 
 const Question = mongoose.model('question', questionSchema);
