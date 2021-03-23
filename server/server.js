@@ -12,7 +12,6 @@ app.get('/qa/questions', (req, res) => {
     product_id: product_id,
     results: []
   }
-  // INNER JOIN photos ON photos.answer_id=answers.answer_id
   var query = `SELECT * FROM questions INNER JOIN answers ON questions.question_id=answers.question_id WHERE questions.product_id=${product_id};`;
   db.connection.query(query, (err, data) => {
     if (err) {
@@ -61,44 +60,25 @@ app.get('/qa/questions', (req, res) => {
         if (photosError) {
           console.log('failed getting photos for questions', photosError);
         } else {
-          //find home for photos in answers objects and push into photos
+          photosResults.forEach((photo) => {
+            var photoObj = {
+              id: photo.id,
+              url: photo.url
+            }
+            queryResults.results.forEach((question) => {
+              for(var answerID in question.answers) {
+                if(question.answers[answerID].id === photo.answer_id) {
+                  question.answers[answerID].photos.push(photoObj);
+                }
+
+              }
+            })
+          })
+          res.send(queryResults);
         }
-      })
-
-
-      // questionStorage.forEach((question) => {
-      //   var answerObj = {
-      //     id: question.answer_id,
-      //     body: question.answer_body,
-      //     date: question.answer_date,
-      //     answerer_name: question.answerer_name,
-      //     helpfulness: question.helpfulness,
-      //     photos: []
-      //   }
-      //   results.forEach((item) => {
-      //     if(item.question_id !== question.question_id) {
-      //       var questionObj = {
-      //         question_id: question.question_id,
-      //         question_body: question.question_body,
-      //         question_date: question.question_date,
-      //         asker_name: question.asker_name,
-      //         question_helpfulness: question.question_helpfulness,
-      //         reported: question.reported,
-      //         answers: {}
-      //       } else {
-      //         item.question_id
-      //       }
-      //     }
-
-        // })
-      // })
-
-      res.send(queryResults);
+      });
     }
-  })
-
-
-
+  });
 });
 
 app.get('/qa/questions/:question_id/answers', (req, res) => {
@@ -173,64 +153,3 @@ app.get('/qa/questions/:question_id/answers', (req, res) => {
 app.listen(port, () => {
   console.log(`server is listening on port: ${port}`);
 });
-
-// var global = {};
-// app.get('/qa/questions/:question_id/answers', (req, res) => {
-//   //${req.params.question_id}
-//   var answersQuery = `SELECT * FROM ANSWERS WHERE (question_id=${req.params.question_id});`;
-//   var queryResults = {
-//     question: req.params.question_id,
-//     page: req.params.page || 0,
-//     count: req.params.count || 5,
-//     results: []
-//   }
-//   db.connection.query(answersQuery, (error, results) => {
-//     if (error) {
-//       console.log('failed to get answers by question_id', error);
-//     } else {
-//       for (var i = 0; i < results.length; i++) {
-
-//         var answerObj = {
-//           answer_id: results[i].answer_id,
-//           body: results[i].answer_body || 'answer removed',
-//           date: results[i].answer_date,
-//           answerer_name: results[i].answerer_name,
-//           helpfulness: results[i].helpfulness,
-//           photos: []
-//         };
-//         let answerID = results[i].answer_id;
-//         var answer = results[i];
-//         let photosQuery = `SELECT * FROM PHOTOS WHERE (answer_id=${answerID});`;
-//         db.connection.query(photosQuery, (errorPhotos, resultsPhotos) => {
-//           if (errorPhotos) {
-//             console.log('failed to get photos by answer_id', errorPhotos);
-//           } else {
-//             console.log('inside photos loop');
-//             // answerObj.photos.push({1: 234234, 4: 234234});
-//             answerObj.photos = [{1: 234234, 2:34234}];
-//             // if(resultsPhotos.length > 0) {
-//             //   var photosArray = []
-//             //   for (var j = 0; j < resultsPhotos.length; j++) {
-//             //     var photoObj = {
-//             //       id: resultsPhotos[j].id,
-//             //       url: resultsPhotos[j].url
-//             //     }
-//             //     console.log('THIS IS LINE 48', answer);
-//             //     photosArray.push(photoObj);
-//             //   }
-//             //   /.photos = photosArray;
-//             // }
-//             console.log(answerObj, "IS HERE!!!!!!!!!!!!!!!!!!!!!!!!!");
-//           }
-//           console.log(queryResults, 'INSIDE ');
-//         })
-//         queryResults.results.push(answerObj);
-//       }
-//       res.send(queryResults);
-//       console.log(queryResults, 'OUTSIDE ');
-//     }
-//   })
-// })
-
-
-
