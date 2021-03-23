@@ -1,5 +1,5 @@
 -- DROP DATABASE IF EXISTS questions;
-CREATE DATABASE IF NOT EXISTS questions;
+-- CREATE DATABASE IF NOT EXISTS questions;
 
 USE questions;
 -- ---
@@ -7,20 +7,19 @@ USE questions;
 --
 -- ---
 
-DROP TABLE IF EXISTS questions;
+-- DROP TABLE IF EXISTS questions;
 
 CREATE TABLE questions (
   `question_id` INTEGER NOT NULL AUTO_INCREMENT,
+  `product_id` INTEGER UNSIGNED NOT NULL,
   `question_body` TEXT(1000) NOT NULL,
   `question_date` DATE NOT NULL,
   `asker_name` VARCHAR(60) NULL,
   `asker_email` VARCHAR(60) NULL,
-  `product_id` SMALLINT NOT NULL,
-  `reported` BINARY NOT NULL DEFAULT 0,
+  `reported` TINYINT NOT NULL DEFAULT 0,
   `question_helpfulness` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
   -- Possibly type booolean not null default false?
-  PRIMARY KEY
-  (`question_id`)
+  PRIMARY KEY (`question_id`)
 );
 
 -- ---
@@ -28,7 +27,7 @@ CREATE TABLE questions (
 --
 -- ---
 
-DROP TABLE IF EXISTS answers;
+-- DROP TABLE IF EXISTS answers;
 
 CREATE TABLE answers (
   `answer_id` INTEGER NOT NULL AUTO_INCREMENT,
@@ -37,7 +36,7 @@ CREATE TABLE answers (
   `answer_date` DATE NOT NULL,
   `answerer_name` VARCHAR(60) NOT NULL,
   `answerer_email` VARCHAR(60) NOT NULL,
-  `reported` BINARY NOT NULL DEFAULT 0,
+  `reported` TINYINT NOT NULL DEFAULT 0,
   `helpfulness` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`answer_id`),
   FOREIGN KEY (`question_id`) REFERENCES questions (`question_id`) ON DELETE CASCADE
@@ -48,7 +47,7 @@ CREATE TABLE answers (
 --
 -- ---
 
-DROP TABLE IF EXISTS photos;
+-- DROP TABLE IF EXISTS photos;
 
 CREATE TABLE `photos` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
@@ -64,14 +63,6 @@ CREATE TABLE `photos` (
 
 -- ALTER TABLE answers ADD FOREIGN KEY (`question_id`) REFERENCES questions(`question_id`) ON DELETE CASCADE;
 -- ALTER TABLE `photos` ADD FOREIGN KEY (`answer_id`) REFERENCES `answers` (`answer_id`) ON DELETE CASCADE;
-
--- ---
--- Table Properties
--- ---
-
--- ALTER TABLE `questions` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `answer` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `photos` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ---
 -- Test Data
