@@ -7,15 +7,97 @@ const port = 3000;
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/qa/questions', (req, res) => {
-  // ${req.query.product_id}
-  var questionsQuery = `SELECT * FROM QUESTIONS WHERE (product_id=${req.query.product_id});`;
-  db.connection.query(questionsQuery, (error, results) => {
-    if (error) {
-      console.log('failed to get all questions', error);
+  var product_id = req.query.product_id;
+  var queryResults = {
+    product_id: product_id,
+    results: []
+  }
+  // INNER JOIN photos ON photos.answer_id=answers.answer_id
+  var query = `SELECT * FROM questions INNER JOIN answers ON questions.question_id=answers.question_id WHERE questions.product_id=${product_id};`;
+  db.connection.query(query, (err, data) => {
+    if (err) {
+      console.log('query error', err);
     } else {
-      res.send(results);
+      var questionStorage = [];
+      var questionIds = [];
+      var questionsResults = queryResults.results;
+      data.forEach((result) => {
+        if(!questionIds.includes(result.question_id))
+        questionIds.push(result.question_id)
+      })
+      questionIds.forEach((id) => {
+        var questionObj = {
+          question_id: id,
+          answers: {}
+        }
+
+        questionsResults.push(questionObj);
+      });
+
+      questionsResults.forEach(question => {
+        data.forEach((result) => {
+          if(question.question_id === result.question_id) {
+            question.question_body = result.question_body;
+            question.question_date = result.question_date;
+            question.asker_name = result.asker_name;
+            question.question_helpfulness = result.question_helpfulness;
+            question.reported = Boolean(result.reported);
+
+            var answerObj = {
+              id: result.answer_id,
+              body:result.answer_body,
+              date:result.answer_date,
+              answerer_name:result.answerer_name,
+              helpfulness:result.helpfulness,
+              photos: []
+            }
+            question.answers[result.answer_id] = answerObj;
+          }
+        })
+      })
+
+      var photosQuery = `SELECT * FROM photos WHERE answer_id IN (SELECT answer_id FROM answers WHERE question_id IN (SELECT question_id FROM questions WHERE product_id=${product_id}));`;
+      db.connection.query(photosQuery, (photosError, photosResults) => {
+        if (photosError) {
+          console.log('failed getting photos for questions', photosError);
+        } else {
+          //find home for photos in answers objects and push into photos
+        }
+      })
+
+
+      // questionStorage.forEach((question) => {
+      //   var answerObj = {
+      //     id: question.answer_id,
+      //     body: question.answer_body,
+      //     date: question.answer_date,
+      //     answerer_name: question.answerer_name,
+      //     helpfulness: question.helpfulness,
+      //     photos: []
+      //   }
+      //   results.forEach((item) => {
+      //     if(item.question_id !== question.question_id) {
+      //       var questionObj = {
+      //         question_id: question.question_id,
+      //         question_body: question.question_body,
+      //         question_date: question.question_date,
+      //         asker_name: question.asker_name,
+      //         question_helpfulness: question.question_helpfulness,
+      //         reported: question.reported,
+      //         answers: {}
+      //       } else {
+      //         item.question_id
+      //       }
+      //     }
+
+        // })
+      // })
+
+      res.send(queryResults);
     }
-  });
+  })
+
+
 
 });
 
@@ -23,7 +105,7 @@ app.get('/qa/questions/:question_id/answers', (req, res) => {
   const question_id = req.params.question_id;
   var queryResults = {
     question: req.params.question_id,
-    page: req.params.page || 0,
+    page: req.params.page || 1,
     count: req.params.count || 5,
     results: []
   };
@@ -81,16 +163,11 @@ app.get('/qa/questions/:question_id/answers', (req, res) => {
             queryResults.results.push(answerObj);
           }
         }
-        res.send(queryResults);
+        res.status(200).send(queryResults);
       });
     }
   });
 });
-
-
-
-
-
 
 
 app.listen(port, () => {
