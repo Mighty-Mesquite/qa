@@ -70,12 +70,11 @@ app.get('/qa/questions', (req, res) => {
                 if(question.answers[answerID].id === photo.answer_id) {
                   question.answers[answerID].photos.push(photoObj);
                 }
-
               }
             })
           })
-          res.send(queryResults);
         }
+        res.status(200).send(queryResults);
       });
     }
   });
@@ -122,27 +121,29 @@ app.get('/qa/questions/:question_id/answers', (req, res) => {
         if (answersError) {
           console.log('failed to get answers for questions', answersError);
         } else {
-          for (var j = 0; j < answersResults.length; j++) {
-            for (var k = 0; k < queryResults.results.length; k++) {
-              if (answersResults[j].answer_id === queryResults.results[k].answer_id) {
-                queryResults.results[k].body = answersResults[j].answer_body || 'answer removed';
-                queryResults.results[k].date = answersResults[j].answer_date;
-                queryResults.results[k].answerer_name = answersResults[j].answerer_name;
-                queryResults.results[k].helpfulness = answersResults[j].helpfulness;
-              } else {
-                var answerObj = {
-                  answer_id: answersResults[j].answer_id,
-                  body: answersResults[j].answer_body || 'answer removed',
-                  date: answersResults[j].answer_date,
-                  answerer_name: answersResults[j].answerer_name,
-                  helpfulness: answersResults[j].helpfulness,
-                  photos: []
+          if(answersResults.length > 0 && queryResults.length > 0) {
+              for (var j = 0; j < answersResults.length; j++) {
+                for (var k = 0; k < queryResults.results.length; k++) {
+                  if (answersResults[j].answer_id === queryResults.results[k].answer_id) {
+                    queryResults.results[k].body = answersResults[j].answer_body || 'answer removed';
+                    queryResults.results[k].date = answersResults[j].answer_date;
+                    queryResults.results[k].answerer_name = answersResults[j].answerer_name;
+                    queryResults.results[k].helpfulness = answersResults[j].helpfulness;
+                  } else {
+                    var answerObj = {
+                      answer_id: answersResults[j].answer_id,
+                      body: answersResults[j].answer_body || 'answer removed',
+                      date: answersResults[j].answer_date,
+                      answerer_name: answersResults[j].answerer_name,
+                      helpfulness: answersResults[j].helpfulness,
+                      photos: []
+                    }
+                  }
                 }
+                queryResults.results.push(answerObj);
               }
             }
-            queryResults.results.push(answerObj);
           }
-        }
         res.status(200).send(queryResults);
       });
     }
