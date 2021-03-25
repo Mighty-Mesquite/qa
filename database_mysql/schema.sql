@@ -74,3 +74,8 @@ CREATE TABLE `photos` (
 -- ('','','','','','');
 -- INSERT INTO `photos` (`id`,`id_answer`,`url`) VALUES
 -- ('','','');
+
+
+-- LOAD DATA LOCAL INFILE '/tmp/questions.csv' INTO TABLE questions FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n'IGNORE 1 ROWS;
+-- LOAD DATA LOCAL INFILE '/tmp/answers.csv' INTO TABLE answers FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n'IGNORE 1 ROWS;
+-- LOAD DATA LOCAL INFILE '/tmp/answers_photos.csv' INTO TABLE photos FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n'IGNORE 1 ROWS;
