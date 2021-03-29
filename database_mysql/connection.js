@@ -1,7 +1,7 @@
 var mysql      = require('mysql2');
 var connection = mysql.createPool({
-  // host     : 'localhost',
-  host     : 'database',
+  host     : 'localhost',
+  // host     : 'database',
   user     : 'root',
   database : 'questions',
   waitForConnection: true,

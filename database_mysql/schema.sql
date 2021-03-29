@@ -18,10 +18,9 @@ CREATE TABLE questions (
   `asker_email` VARCHAR(60) NULL,
   `reported` TINYINT NOT NULL DEFAULT 0,
   `question_helpfulness` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
-  -- Possibly type booolean not null default false?
   PRIMARY KEY (`question_id`)
 );
-
+-- create index product_index using btree on questions (product_id);
 -- ---
 -- Table 'answer'
 --
@@ -76,6 +75,7 @@ CREATE TABLE `photos` (
 -- ('','','');
 
 
--- LOAD DATA LOCAL INFILE '/tmp/questions.csv' INTO TABLE questions FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n'IGNORE 1 ROWS;
--- LOAD DATA LOCAL INFILE '/tmp/answers.csv' INTO TABLE answers FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n'IGNORE 1 ROWS;
--- LOAD DATA LOCAL INFILE '/tmp/answers_photos.csv' INTO TABLE photos FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n'IGNORE 1 ROWS;
+-- LOAD DATA LOCAL INFILE './questions.csv' INTO TABLE questions FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n'IGNORE 1 ROWS;
+-- LOAD DATA LOCAL INFILE './answers.csv' INTO TABLE answers FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n'IGNORE 1 ROWS;
+-- LOAD DATA LOCAL INFILE './answers_photos.csv' INTO TABLE photos FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n'IGNORE 1 ROWS;
+
