@@ -2,9 +2,13 @@ const express = require('express');
 const app = express();
 const db = require('../database_mysql/connection.js');
 const bodyParser = require('body-parser');
-const port = 3000;
+const port = 3001;
 
 app.use(bodyParser.urlencoded({extended: true}));
+
+app.get('/', (req, res) => {
+  res.send('server running');
+});
 
 app.get('/qa/questions', (req, res) => {
   var product_id = req.query.product_id;
